@@ -3,4 +3,6 @@ project(MyProject)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(MyProject Work_1.cpp)
+add_executable(work1 Work_1.cpp)
+add_executable(work2 Work_2.cpp)
+add_executable(work3 Work_3.cpp)
