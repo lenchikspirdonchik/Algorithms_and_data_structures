@@ -20,7 +20,7 @@ int main() {
     cout << "Original array:" << endl;
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < n; j++) {
-            int number = (rand() % 1000 + 10);
+            int number = (rand() % 100 + 10);
             array[i][j] = number;
             cout << setw(5) << array[i][j];
 
@@ -48,5 +48,17 @@ int main() {
         cout << endl;
     }
 
+    cout << "\nReplacement of the maximum and minimum..." << endl;
 
+    array[buffArray[0][1]][buffArray[0][2]] = buffArray[1][0];
+    array[buffArray[1][1]][buffArray[1][2]] = buffArray[0][0];
+
+
+    cout << "Modified array:" << endl;
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            cout << setw(5) << array[i][j];
+        }
+        cout << endl;
+    }
 }
