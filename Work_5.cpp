@@ -11,8 +11,19 @@ using namespace std;
  * быстрой сортировки, а также сортировка выбором. Вывести на экран неупорядоченную и упорядоченную матрицы,
  * число сравнений (перестановок) элементов в каждом методе сортировки и время, которое было потрачено на сортировку.
  * Упорядочить каждый четный столбец массива по убыванию суммы значений элементов матрицы.*/
+void bubbleSort(int *arr, int n) {
+    int counter = 0;
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                swap(arr[j], arr[j + 1]);
+                ++counter;
+            }
+        }
+    }
+}
 
-void QuickSort(int *ar, int l, int r) {
+int QuickSort(int *ar, int l, int r, int iterCount) {
     int mid = ar[(l + r) / 2];
     int i = l, j = r;
     do {
@@ -22,12 +33,14 @@ void QuickSort(int *ar, int l, int r) {
             int temp = ar[i];
             ar[i++] = ar[j];
             ar[j--] = temp;
+            iterCount++;
         }
-    } while (i <= j);
+    } while (i < j);
     if (l < j)
-        QuickSort(ar, l, j);
+        QuickSort(ar, l, j, iterCount);
     if (i < r)
-        QuickSort(ar, i, r);
+        QuickSort(ar, i, r, iterCount);
+    return iterCount;
 }
 
 
@@ -39,7 +52,9 @@ int main() {
     cin >> n;
     int array[m][n];
     int bubbleArray[m][n];
-    int fastArray[m][n];
+    int quickArray[m][n];
+    int choicesArray[m][n];
+    int iterationCount = 0;
     srand(time(0));
     cout << "Original array:" << endl;
     for (int i = 0; i < m; i++) {
@@ -57,22 +72,12 @@ int main() {
         for (int b = 0; b < n; b++) {
             ar[b] = array[a][b];
         }
-        for (int i = 0; i < n; i++) {
-            bool b = false;
-            for (int j = 0; j < n; j++) {
-                if (ar[j] > ar[j + 1]) {
-                    int Tmp = ar[j];
-                    ar[j] = ar[j + 1];
-                    ar[j + 1] = Tmp;
-                    b = true;
-                }
-            }
-            if (!b) break;
-        }
+        bubbleSort(ar, n);
         for (int b = 0; b < n; b++) {
             bubbleArray[a][b] = ar[b];
         }
     }
+
 
     cout << "Edited array (bubble sort):" << endl;
     for (int i = 0; i < m; i++) {
@@ -81,7 +86,11 @@ int main() {
         }
         cout << endl;
     }
-    cout << "-------------------------" << endl;
+    cout << "Iteration count = " << iterationCount << endl;
+
+
+    //Quick sort
+    cout << "\n-------------------------" << endl;
     cout << "Original array (again):" << endl;
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < n; j++) {
@@ -90,32 +99,64 @@ int main() {
         cout << endl;
     }
 
+    iterationCount = 0;
+    for (int a = 0; a < m; a++) {
+        int ar[n];
+        for (int b = 0; b < n; b++) {
+            ar[b] = array[a][b];
+        }
+        iterationCount += QuickSort(ar, 0, n, iterationCount);
+        for (int b = 0; b < n; b++) {
+            quickArray[a][b] = ar[b];
+        }
+    }
+    cout << "Edited array (Quick sort):" << endl;
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            cout << setw(5) << quickArray[i][j];
+        }
+        cout << endl;
+    }
+    cout << "Iteration count = " << iterationCount << endl;
+
+    //Choices sort
+    cout << "\n-------------------------" << endl;
+    cout << "Original array (again):" << endl;
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            cout << setw(5) << array[i][j];
+        }
+        cout << endl;
+    }
+    iterationCount = 0;
 
     for (int a = 0; a < m; a++) {
         int ar[n];
         for (int b = 0; b < n; b++) {
             ar[b] = array[a][b];
         }
-        QuickSort(ar, 0, n);
+        for (int i = 0; i < n - 1; i++) {
+            int min = i;
+            for (int j = i + 1; j < n; j++) {
+                if (ar[j] < ar[min])
+                    min = j;
+                iterationCount++;
+            }
+
+            int tmp = ar[min];
+            ar[min] = ar[i];
+            ar[i] = tmp;
+        }
         for (int b = 0; b < n; b++) {
-            fastArray[a][b] = ar[b];
+            choicesArray[a][b] = ar[b];
         }
     }
-    cout << "Edited array (fast sort):" << endl;
+    cout << "Edited array (Choices sort):" << endl;
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < n; j++) {
-            cout << setw(5) << fastArray[i][j];
+            cout << setw(5) << choicesArray[i][j];
         }
         cout << endl;
     }
-
-
-    cout << "-------------------------" << endl;
-    cout << "Original array (again):" << endl;
-    for (int i = 0; i < m; i++) {
-        for (int j = 0; j < n; j++) {
-            cout << setw(5) << array[i][j];
-        }
-        cout << endl;
-    }
+    cout << "Iteration count = " << iterationCount << endl;
 }
