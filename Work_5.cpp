@@ -11,38 +11,50 @@ using namespace std;
  * быстрой сортировки, а также сортировка выбором. Вывести на экран неупорядоченную и упорядоченную матрицы,
  * число сравнений (перестановок) элементов в каждом методе сортировки и время, которое было потрачено на сортировку.
  * Упорядочить каждый четный столбец массива по убыванию суммы значений элементов матрицы.*/
-void bubbleSort(int *arr, int n) {
+int bubbleSort(int *arr, int n, int iterCount) {
     int counter = 0;
     for (int i = 0; i < n - 1; i++) {
         for (int j = 0; j < n - i - 1; j++) {
             if (arr[j] > arr[j + 1]) {
                 swap(arr[j], arr[j + 1]);
                 ++counter;
+                iterCount++;
             }
         }
     }
-}
-
-int QuickSort(int *ar, int l, int r, int iterCount) {
-    int mid = ar[(l + r) / 2];
-    int i = l, j = r;
-    do {
-        while (ar[i] < mid) i++;
-        while (mid < ar[j]) j--;
-        if (i <= j) {
-            int temp = ar[i];
-            ar[i++] = ar[j];
-            ar[j--] = temp;
-            iterCount++;
-        }
-    } while (i < j);
-    if (l < j)
-        QuickSort(ar, l, j, iterCount);
-    if (i < r)
-        QuickSort(ar, i, r, iterCount);
     return iterCount;
 }
 
+int qsortRecursive(int *mas, int size, int iterCount) {
+    int i = 0;
+    int j = size - 1;
+    int mid = mas[size / 2];
+
+    do {
+        while (mas[i] < mid) {
+            i++;
+        }
+        while (mas[j] > mid) {
+            j--;
+        }
+        if (i <= j) {
+            int tmp = mas[i];
+            mas[i] = mas[j];
+            mas[j] = tmp;
+
+            i++;
+            j--;
+            iterCount++;
+        }
+    } while (i <= j);
+    if (j > 0) {
+        qsortRecursive(mas, j + 1, iterCount);
+    }
+    if (i < size) {
+        qsortRecursive(&mas[i], size - i, iterCount);
+    }
+    return iterCount;
+}
 
 int main() {
     int m = 0, n = 0;
@@ -67,12 +79,13 @@ int main() {
     }
 
     //bubble sort
+    unsigned int start_time = clock();
     for (int a = 0; a < m; a++) {
         int ar[n];
         for (int b = 0; b < n; b++) {
             ar[b] = array[a][b];
         }
-        bubbleSort(ar, n);
+        iterationCount += bubbleSort(ar, n, iterationCount);
         for (int b = 0; b < n; b++) {
             bubbleArray[a][b] = ar[b];
         }
@@ -86,8 +99,35 @@ int main() {
         }
         cout << endl;
     }
+    unsigned int end_time = clock();
+    unsigned int search_time = end_time - start_time;
+    cout << "program running time = " << search_time << endl;
     cout << "Iteration count = " << iterationCount << endl;
-
+    for (int i = 0; i < m; i += 2) {
+        for (int l = i + 2; l < m; l += 2) {
+            int sumOne = 0, sumTwo = 0;
+            for (int j = 0; j < n; ++j) {
+                sumOne += bubbleArray[i][j];
+                sumTwo += bubbleArray[l][j];
+            }
+            if (sumOne < sumTwo) {
+                for (int j = 0; j < n; ++j) {
+                    int b = bubbleArray[i][j];
+                    bubbleArray[i][j] = bubbleArray[l][j];
+                    bubbleArray[l][j] = b;
+                }
+            }
+        }
+    }
+    cout << "Edited array (2):" << endl;
+    for (int i = 0; i < m; i++) {
+        int sum = 0;
+        for (int j = 0; j < n; j++) {
+            sum += bubbleArray[i][j];
+            cout << setw(5) << bubbleArray[i][j];
+        }
+        cout << "\t" << sum << endl;
+    }
 
     //Quick sort
     cout << "\n-------------------------" << endl;
@@ -98,16 +138,17 @@ int main() {
         }
         cout << endl;
     }
-
+    start_time = clock();
     iterationCount = 0;
     for (int a = 0; a < m; a++) {
         int ar[n];
         for (int b = 0; b < n; b++) {
             ar[b] = array[a][b];
         }
-        iterationCount += QuickSort(ar, 0, n, iterationCount);
+        iterationCount += qsortRecursive(ar, n, iterationCount);
         for (int b = 0; b < n; b++) {
             quickArray[a][b] = ar[b];
+
         }
     }
     cout << "Edited array (Quick sort):" << endl;
@@ -117,7 +158,35 @@ int main() {
         }
         cout << endl;
     }
+    end_time = clock();
+    search_time = end_time - start_time;
+    cout << "program running time = " << search_time << endl;
     cout << "Iteration count = " << iterationCount << endl;
+    for (int i = 0; i < m; i += 2) {
+        for (int l = i + 2; l < m; l += 2) {
+            int sumOne = 0, sumTwo = 0;
+            for (int j = 0; j < n; ++j) {
+                sumOne += quickArray[i][j];
+                sumTwo += quickArray[l][j];
+            }
+            if (sumOne < sumTwo) {
+                for (int j = 0; j < n; ++j) {
+                    int b = quickArray[i][j];
+                    quickArray[i][j] = quickArray[l][j];
+                    quickArray[l][j] = b;
+                }
+            }
+        }
+    }
+    cout << "Edited array (2):" << endl;
+    for (int i = 0; i < m; i++) {
+        int sum = 0;
+        for (int j = 0; j < n; j++) {
+            sum += bubbleArray[i][j];
+            cout << setw(5) << bubbleArray[i][j];
+        }
+        cout << "\t" << sum << endl;
+    }
 
     //Choices sort
     cout << "\n-------------------------" << endl;
@@ -128,8 +197,8 @@ int main() {
         }
         cout << endl;
     }
+    start_time = clock();
     iterationCount = 0;
-
     for (int a = 0; a < m; a++) {
         int ar[n];
         for (int b = 0; b < n; b++) {
@@ -158,5 +227,34 @@ int main() {
         }
         cout << endl;
     }
+    end_time = clock();
+    search_time = end_time - start_time;
+    cout << "program running time = " << search_time << endl;
     cout << "Iteration count = " << iterationCount << endl;
+
+    for (int i = 0; i < m; i += 2) {
+        for (int l = i + 2; l < m; l += 2) {
+            int sumOne = 0, sumTwo = 0;
+            for (int j = 0; j < n; ++j) {
+                sumOne += choicesArray[i][j];
+                sumTwo += choicesArray[l][j];
+            }
+            if (sumOne < sumTwo) {
+                for (int j = 0; j < n; ++j) {
+                    int b = choicesArray[i][j];
+                    choicesArray[i][j] = choicesArray[l][j];
+                    choicesArray[l][j] = b;
+                }
+            }
+        }
+    }
+    cout << "Edited array (2):" << endl;
+    for (int i = 0; i < m; i++) {
+        int sum = 0;
+        for (int j = 0; j < n; j++) {
+            sum += choicesArray[i][j];
+            cout << setw(5) << choicesArray[i][j];
+        }
+        cout << "\t" << sum << endl;
+    }
 }
