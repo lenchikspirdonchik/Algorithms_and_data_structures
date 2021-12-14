@@ -1,6 +1,8 @@
 #include <iostream>
 #include <iomanip>
-
+/*Задан двумеpный массив А из N строк и М столбцов. Составить программу для сортировки методами: пузырьковой,
+ * быстрой сортировки, а также сортировка выбором. Вывести на экран неупорядоченную и упорядоченную матрицы, число сравнений (перестановок) элементов
+ * в каждом методе сортировки и время, которое было потрачено на сортировку. Упорядочить каждый четный столбец массива по убыванию суммы значений элементов матрицы.*/
 using namespace std;
 
 int **matrixScrew(int **a, int n, int m) {
@@ -102,6 +104,7 @@ int main() {
 
     mainArray = matrixScrew(mainArray, n, m);
 
+    //Bubble sort
 
     int **bubbleArray = mainArray;
     unsigned int start_time = clock();
@@ -122,6 +125,8 @@ int main() {
     cout << "Bubble Sort Iterations: " << totalIterations << endl;
     cout << "-------------------------\n" << endl;
 
+
+//Quick sort
 
     int **quickArray = mainArray;
     start_time = clock();
@@ -164,7 +169,7 @@ int main() {
     }
 
     cout << "program running time = " << search_time << endl;
-    cout << "Quick Sort Iterations: " << totalIterations << endl;
-    cout << "test2-------------------------\n" << endl;
+    cout << "Choices Sort Iterations: " << totalIterations << endl;
+    cout << "-------------------------\n" << endl;
 
 }
