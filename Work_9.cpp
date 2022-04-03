@@ -5,7 +5,7 @@
 
 using namespace std;
 
-bool getMin(int first, int second) {
+bool getMin(double first, double second) {
     if (first < second) return true;
     return false;
 }
