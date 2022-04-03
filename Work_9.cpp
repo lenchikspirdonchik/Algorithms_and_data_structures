@@ -11,7 +11,7 @@ bool getMin(int first, int second) {
 }
 
 int main() {
-    int x = 0, y = 0, z = 0;
+    double x = 0, y = 0, z = 0;
     cout << "Enter x:";
     cin >> x;
     cout << "Enter y:";
@@ -28,4 +28,5 @@ int main() {
     else
         y = y * y;
 
+    cout << "x= "<<to_string(x)<<" y= "<<to_string(y)<<" z= "<<to_string(z)<<endl;
 }
