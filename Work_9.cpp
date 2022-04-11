@@ -28,5 +28,5 @@ int main() {
     else
         y = y * y;
 
-    cout << "x= "<<to_string(x)<<" y= "<<to_string(y)<<" z= "<<to_string(z)<<endl;
+    cout << "x= " << to_string(x) << " y= " << to_string(y) << " z= " << to_string(z) << endl;
 }
